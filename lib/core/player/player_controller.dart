@@ -22,6 +22,8 @@ enum RepeatMode {
 class PlayerController extends ChangeNotifier {
 final AudioPlayer _player = AudioPlayer();
 
+AudioPlayer get player => _player;
+
 Future<int?> get androidAudioSessionId async {
   return _player.androidAudioSessionId;
  }

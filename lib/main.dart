@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:rhythmax/core/utils/connectivity.dart';
+import 'package:audio_service/audio_service.dart';
+import 'package:rhythmax/core/audio/rhythmax_audio_handler.dart';
 import 'package:rhythmax/core/player/player_provider.dart';
 import 'package:rhythmax/core/source/source_manager.dart';
 import 'package:rhythmax/core/theme/dynamic_color_helper.dart';
@@ -13,7 +14,6 @@ import 'package:rhythmax/ui/app_shell_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await ConnectivityService.instance;
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   SystemChrome.setPreferredOrientations([
@@ -21,6 +21,16 @@ void main() async {
 ]);
 
 await _registerSources();
+
+  await AudioService.init(
+    builder: () => RhythmaxAudioHandler(),
+    config: const AudioServiceConfig(
+      androidNotificationChannelId: 'music.odskyler.rhythmax.playback',
+      androidNotificationChannelName: 'Playback',
+      androidNotificationOngoing: true,
+      androidNotificationIcon: 'mipmap/ic_launcher',
+    ),
+  );
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
   statusBarColor: Colors.transparent,
